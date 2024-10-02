@@ -1,0 +1,27 @@
+﻿@model List<ProductType>
+
+<h1>Product Type List</h1>
+
+<a asp-controller="ProductType" asp-action="Edit" class="btn btn-secondary">Create</a>
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (ProductType item in Model)
+        {
+            <tr>
+                <td>@item.Id</td>
+                <td>@item.Name</td>
+                <td>
+                    <a asp-controller="ProductType" asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary">Edit</a>
+                    <a asp-controller="ProductType" asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete?');">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
