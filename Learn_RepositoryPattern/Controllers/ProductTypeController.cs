@@ -1,21 +1,23 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Learn_RepositoryPattern.DataAccess.Data;
 using Learn_RepositoryPattern.Model;
+using Learn_RepositoryPattern.DataAccess.Repository.IRepository;
+using Learn_RepositoryPattern.DataAccess.Repository;
 
 namespace Learn_RepositoryPattern.Controllers
 {
     public class ProductTypeController : Controller
     {
-        private readonly ApplicationDbContext _applicationDbContext;
+        private readonly IProductTypeRepository _repository;
 
-        public ProductTypeController(ApplicationDbContext applicationDbContext)
+        public ProductTypeController(IProductTypeRepository repository)
         {
-            _applicationDbContext = applicationDbContext;
+            _repository = repository;
         }
 
         public IActionResult Index()
         {
-            List<ProductType> productTypeList = _applicationDbContext.ProductType.ToList();
+            List<ProductType> productTypeList = _repository.GetAll().ToList();
 
             return View(productTypeList);
         }
@@ -35,7 +37,7 @@ namespace Learn_RepositoryPattern.Controllers
             }
             else
             {
-                obj = _applicationDbContext.ProductType.Find(id);
+                obj = _repository.Get(o => o.Id == id);
             }
 
             return View(obj);
@@ -43,11 +45,11 @@ namespace Learn_RepositoryPattern.Controllers
 
         public IActionResult Delete(int? id)
         {
-            ProductType? obj = _applicationDbContext.ProductType.Find(id);
+            ProductType? obj = _repository.Get(o => o.Id == id);
 
-            _applicationDbContext.ProductType.Remove(obj);
+            _repository.Remove(obj);
 
-            _applicationDbContext.SaveChanges();
+            _repository.Save();
 
             return RedirectToAction("Index");
         }
@@ -57,18 +59,18 @@ namespace Learn_RepositoryPattern.Controllers
         {
             if (obj.Id == 0)
             {
-                _applicationDbContext.ProductType.Add(obj);
+                _repository.Add(obj);
             }
             else
             {
-                ProductType? updObj = _applicationDbContext.ProductType.Find(obj.Id);
+                ProductType? updObj = _repository.Get(o => o.Id == obj.Id);
 
                 updObj.Name = obj.Name;
 
-                _applicationDbContext.ProductType.Update(updObj);
+                _repository.Update(updObj);
             }
 
-            _applicationDbContext.SaveChanges();
+            _repository.Save();
 
             return RedirectToAction("Index");
         }

@@ -1,4 +1,6 @@
 using Learn_RepositoryPattern.DataAccess.Data;
+using Learn_RepositoryPattern.DataAccess.Repository;
+using Learn_RepositoryPattern.DataAccess.Repository.IRepository;
 
 using Microsoft.EntityFrameworkCore;
 
@@ -9,6 +11,9 @@ builder.Services.AddControllersWithViews();
 
 // Database
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+// Repository
+builder.Services.AddScoped<IProductTypeRepository, ProductTypeRepository>();
 
 var app = builder.Build();
 
