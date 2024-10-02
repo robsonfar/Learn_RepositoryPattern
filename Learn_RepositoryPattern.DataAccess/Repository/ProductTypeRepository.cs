@@ -18,11 +18,6 @@ namespace Learn_RepositoryPattern.DataAccess.Repository
             _context = context;
         }
 
-        public void Save()
-        {
-            _context.SaveChanges();
-        }
-
         public void Update(ProductType entity)
         {
             _context.ProductType.Update(entity);

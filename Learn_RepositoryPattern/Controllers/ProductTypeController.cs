@@ -8,16 +8,16 @@ namespace Learn_RepositoryPattern.Controllers
 {
     public class ProductTypeController : Controller
     {
-        private readonly IProductTypeRepository _repository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public ProductTypeController(IProductTypeRepository repository)
+        public ProductTypeController(IUnitOfWork unitOfWork)
         {
-            _repository = repository;
+            _unitOfWork = unitOfWork;
         }
 
         public IActionResult Index()
         {
-            List<ProductType> productTypeList = _repository.GetAll().ToList();
+            List<ProductType> productTypeList = _unitOfWork.ProductTypeRepository.GetAll().ToList();
 
             return View(productTypeList);
         }
@@ -37,7 +37,7 @@ namespace Learn_RepositoryPattern.Controllers
             }
             else
             {
-                obj = _repository.Get(o => o.Id == id);
+                obj = _unitOfWork.ProductTypeRepository.Get(o => o.Id == id);
             }
 
             return View(obj);
@@ -45,11 +45,11 @@ namespace Learn_RepositoryPattern.Controllers
 
         public IActionResult Delete(int? id)
         {
-            ProductType? obj = _repository.Get(o => o.Id == id);
+            ProductType? obj = _unitOfWork.ProductTypeRepository.Get(o => o.Id == id);
 
-            _repository.Remove(obj);
+            _unitOfWork.ProductTypeRepository.Remove(obj);
 
-            _repository.Save();
+            _unitOfWork.Save();
 
             return RedirectToAction("Index");
         }
@@ -59,18 +59,18 @@ namespace Learn_RepositoryPattern.Controllers
         {
             if (obj.Id == 0)
             {
-                _repository.Add(obj);
+                _unitOfWork.ProductTypeRepository.Add(obj);
             }
             else
             {
-                ProductType? updObj = _repository.Get(o => o.Id == obj.Id);
+                ProductType? updObj = _unitOfWork.ProductTypeRepository.Get(o => o.Id == obj.Id);
 
                 updObj.Name = obj.Name;
 
-                _repository.Update(updObj);
+                _unitOfWork.ProductTypeRepository.Update(updObj);
             }
 
-            _repository.Save();
+            _unitOfWork.Save();
 
             return RedirectToAction("Index");
         }
